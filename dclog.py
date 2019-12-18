@@ -5,7 +5,7 @@ from db import Mongo
 
 
 class Dclog:
-    __URL = "http://dctest.sigmob.cn/Logging_check.class.php?lasthour=true&table=1&params={0}"
+    __URL = ""
     __db = Mongo()
 
     def __init__(self):
