@@ -1,5 +1,5 @@
 import pymongo
-
+from exceptions import DbSortFieldIsNone
 
 class SingletonMode:
     def __new__(cls, *args, **kwargs):
@@ -19,20 +19,34 @@ class Mongo(SingletonMode):
         db_list = self.mongo.list_database_names()
         self.mongo[db] if db not in db_list else print("")
 
+    @property
     def get_db(self):
         my_db = self.mongo.get_database(self.db)
         return my_db[self.db]
 
     def close(self):
         self.mongo.close()
+    
+    def __db_sort(self, result, sort_way, field):
+        if not field:
+            raise DbSortFieldIsNone()
+        else:
+            return result.sort(field, sort_way)
+        
+    def find_all(self, sort_way=None, field=None, *args, **kwargs):
+        if sort_way:
+            return self.__db_sort(result=self.get_db.find(*args, **kwargs), sort_way=sort_way, field=field)
+        else:
+            return self.get_db.find(*args, **kwargs)
+
+    def find_one_data(self, sort_way=None, field=None, *args, **kwargs):
+        if sort_way:
+            return self.__db_sort(result=self.get_db.find_one(*args, **kwargs), sort_way=sort_way, field=field)
+        else:
+            return self.get_db.find_one(*args, **kwargs)
 
 
 if __name__ == '__main__':
     db = Mongo()
-    # db.get_db().drop()
-    data = db.get_db().find({
-        "_ac_type": "2",
-        "category": "init"
-    })
-    for i in data:
+    for i in db.find_all(sort_way=-1, field="seq_id", filter={"adtype": "1"}):
         print(i)

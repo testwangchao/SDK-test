@@ -1,6 +1,7 @@
 from driver import InitDriver
 import time
 import re
+import requests
 
 
 class OperateSdk:
@@ -14,20 +15,28 @@ class OperateSdk:
             self.driver.xpath(element).click()
         elif re.findall("skip", element):
             self.driver(description="skip").click()
+        else:
+            self.driver(text=element).click()
 
 
 if __name__ == '__main__':
-    driver = InitDriver(device_name="c6c1b81e")
+    driver = InitDriver(device_name="85b531c0")
     d = driver.init_driver
     sdk = OperateSdk(driver=d)
     sdk.driver.app_start("com.sigmob.demo.android")
-    sdk.click(text="load dffa3806ae2")
+    sdk.click("load dffa3806ae2")
     # todo: check ad is ready by dclog
     time.sleep(5)
-    sdk.click(text="play dffa3806ae2")
-
-    if sdk.driver(description="立即下载").exists(timeout=100):
-        sdk.driver.xpath(
-            '//*[@resource-id="com.sigmob.demo.android:id/dokit_app_contentview_id"]/android.widget.FrameLayout[1]/android.widget.RelativeLayout[1]/android.widget.RelativeLayout[2]').click()
-    else:
-        print("error")
+    sdk.click("play dffa3806ae2")
+    # try:
+    #     if sdk.driver(text="立即下载").exists(timeout=50):
+    #         sdk.driver.xpath('//android.widget.RelativeLayout[1]/android.widget.RelativeLayout[2]').click()
+    # except requests.ReadTimeout:
+    #     if sdk.driver(description="立即下载").exists(timeout=50):
+    #         sdk.driver.xpath('//android.widget.RelativeLayout[1]/android.widget.RelativeLayout[2]').click()
+    while 1:
+        if sdk.driver(text="立即下载1111").exists():
+            print(sdk.driver(text="立即下载").exists())
+            sdk.driver.xpath('//android.widget.RelativeLayout[1]/android.widget.RelativeLayout[2]').click()
+        elif sdk.driver(description="立即下载").exists(timeout=50):
+            sdk.driver.xpath('//android.widget.RelativeLayout[1]/android.widget.RelativeLayout[2]').click()

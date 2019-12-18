@@ -10,6 +10,7 @@ from record_time import RecordTime
 
 
 class LoadAd(unittest.TestCase):
+
     driver = InitDriver(device_name="85b531c0")
     __d = driver.init_driver
     __op_sdk = OperateSdk(driver=__d)

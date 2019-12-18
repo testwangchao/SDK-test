@@ -21,11 +21,12 @@ class Dclog:
         log_result = requests.get(self.log_url).text
 
     def get_wmsession_id(self, tp):
-        data = self.__db.get_db().find(
-            {"$where": "function() {return this.timestamp>%d}" % tp}
-        ).sort("seq_id", -1)
+        filter_data = {"$where": "function() {return this.timestamp>%d}" % tp, "_ac_type": "5"}
+        data = self.__db.find_all(sort_way=-1, field="timestamp", filter=filter_data)
+        for i in data:
+            print(i)
 
 
 if __name__ == '__main__':
     db = Dclog()
-    print(db.get_wmsession_id(tp=1576671415783))
+    db.get_wmsession_id(tp=1576671452450)
