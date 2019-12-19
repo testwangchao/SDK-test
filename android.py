@@ -6,11 +6,12 @@ class Android(OperateSdk):
     LOAD_AD = "load dffa3806ae2"
     PLAY_AD = "play dffa3806ae2"
     CLOSE_BUTTON = "'//android.widget.RelativeLayout[1]/android.widget.RelativeLayout[2]'"
-    CLICK_BUTTON = ""
+    CLICK_BUTTON = "立即下载"
     SKIP_BUTTON = "skip"
 
     def __init__(self, driver):
         super(Android, self).__init__(driver)
+        self.driver = driver
 
     # load ad
     def load_ad(self):
@@ -34,7 +35,35 @@ class Android(OperateSdk):
 
 
 if __name__ == '__main__':
-    __driver = InitDriver(device_name="127.0.0.1:62001").init_driver
-    an = Android(driver=__driver, name="wangchao")
-    print(an.name)
-    an.click('''//*[@resource-id="com.android.browser:id/url"]''')
+
+    import time
+    __driver = InitDriver(device_name="85b531c0").init_driver
+    an = Android(driver=__driver)
+    __driver.app_start("com.sigmob.demo.android")
+    __driver.watcher(name="accept permissions").when(text="拒绝").click(text="总是允许")
+    # __driver.watcher(name="install finish back to demo").when(text="完成").press("back")
+    # __driver.watcher(name="accept permissions").watched=True
+    # __driver.watcher(name="install").watched=True
+    # __driver.watcher(name="install finish back to demo").watched=True
+    # __driver.watcher(name="accept permissions")
+    an.load_ad()
+    toast_msg = None
+    while 1:
+        toast_msg = an.driver.toast.get_message(wait_timeout=1, cache_timeout=5)
+        if toast_msg == "onVideoAdLoadSuccess":
+            break
+    print(toast_msg)
+    an.play_ad()
+    while 1:
+        toast_msg = an.driver.toast.get_message(wait_timeout=1, cache_timeout=5)
+        print(toast_msg)
+        if toast_msg == "onVideoAdPlayEnd":
+            an.click_button()
+        __driver.watcher(name="install").when(text="安装").click(text="安装")
+        __driver.watcher(name="install").watched = True
+        if __driver.watcher("install").triggered:
+            print("开始安装")
+        __driver.watcher(name="install finish back to demo").when(text="应用安装完成。").press("back")
+        __driver.watcher(name="install finish back to demo").watched = True
+        if __driver.watcher("install finish back to demo").triggered:
+            print("安装完成")
