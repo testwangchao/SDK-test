@@ -10,7 +10,7 @@ class Dclog:
 
     def __init__(self):
         self.filter_para = None
-        self.format = self.__URL.format(json.dumps(self.filter_para))
+        self.log_url = self.__URL.format(json.dumps(self.filter_para))
 
     def __call__(self, para, **kwargs):
         self.filter_para = para
