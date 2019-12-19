@@ -40,12 +40,16 @@ if __name__ == '__main__':
     __driver = InitDriver(device_name="85b531c0").init_driver
     an = Android(driver=__driver)
     __driver.app_start("com.sigmob.demo.android")
-    __driver.watcher(name="accept permissions").when(text="拒绝").click(text="总是允许")
+    __driver.xpath.when("总是允许").click()
+    __driver.xpath.when("安装").click()
+    __driver.xpath.when("完成").click()
     # __driver.watcher(name="install finish back to demo").when(text="完成").press("back")
     # __driver.watcher(name="accept permissions").watched=True
     # __driver.watcher(name="install").watched=True
     # __driver.watcher(name="install finish back to demo").watched=True
     # __driver.watcher(name="accept permissions")
+    __driver.xpath.watch_background()  # 默认每4s检查一次
+
     an.load_ad()
     toast_msg = None
     while 1:
@@ -59,11 +63,3 @@ if __name__ == '__main__':
         print(toast_msg)
         if toast_msg == "onVideoAdPlayEnd":
             an.click_button()
-        __driver.watcher(name="install").when(text="安装").click(text="安装")
-        __driver.watcher(name="install").watched = True
-        if __driver.watcher("install").triggered:
-            print("开始安装")
-        __driver.watcher(name="install finish back to demo").when(text="应用安装完成。").press("back")
-        __driver.watcher(name="install finish back to demo").watched = True
-        if __driver.watcher("install finish back to demo").triggered:
-            print("安装完成")
