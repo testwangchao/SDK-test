@@ -1,4 +1,0 @@
-[2019-12-18 19:40:49,946] [INFO] [Sigmob-Mac-mini.local][driver.py - line:15] init driver, device_name: 85b531c0
-[2019-12-18 19:40:50,074] [INFO] [Sigmob-Mac-mini.local][driver.py - line:24] connect 85b531c0 success
-[2019-12-18 19:57:06,465] [INFO] [Sigmob-Mac-mini.local][driver.py - line:15] init driver, device_name: 85b531c0
-[2019-12-18 19:57:06,579] [INFO] [Sigmob-Mac-mini.local][driver.py - line:24] connect 85b531c0 success
