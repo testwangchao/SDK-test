@@ -1,6 +1,5 @@
 import uiautomator2 as ut2
 from tools.loggers import JFMlogging
-
 log = JFMlogging().getloger()
 
 
@@ -26,3 +25,9 @@ class InitDriver:
 
         except Exception as e:
             log.info("init driver failed: %s" % e)
+
+
+if __name__ == '__main__':
+    d2 = ut2.connect("85b531c0")
+    d2.app_start("com.sigmob.demo.android")
+

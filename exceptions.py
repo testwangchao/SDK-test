@@ -1,7 +1,8 @@
 
 
 class BaseException(Exception):
-    pass
+    def __init__(self, msg=None):
+        self.msg = msg
 
 
 class DbSortFieldIsNone(BaseException):
@@ -9,10 +10,13 @@ class DbSortFieldIsNone(BaseException):
 
 
 class AdLoadFailed(BaseException):
-    def __init__(self, msg):
-        self.msg = msg
-        
-        
+    pass
+
+
+class LogDataError(BaseException):
+    pass
+
+
 if __name__ == '__main__':
     if 1:
         raise AdLoadFailed("test")

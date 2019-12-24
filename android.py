@@ -1,6 +1,7 @@
 from operate_sdk import OperateSdk
 from driver import InitDriver
 from install_element import WatchInstall
+import time
 
 
 class Android(OperateSdk):
@@ -15,6 +16,7 @@ class Android(OperateSdk):
     def __init__(self, driver):
         super(Android, self).__init__(driver)
         self.driver = driver
+        self.is_ready = False
 
     def __call__(self, driver, **kwargs):
         __watchers = WatchInstall(driver)
@@ -67,11 +69,17 @@ class Android(OperateSdk):
         while 1:
             pass
 
+    # stop demo and restart demo
+    def restart_demo(self):
+        self.driver.app_stop("com.sigmob.demo.android")
+        self.driver.app_start("com.sigmob.demo.android")
+        time.sleep(7)
+
 
 if __name__ == '__main__':
     from uiautomator2.watcher import Watcher
-    import time
-    __driver = InitDriver(device_name="127.0.0.1:62001").init_driver
+
+    __driver = InitDriver(device_name="85b531c0").init_driver
     an = Android(driver=__driver)
     try:
         __driver.app_uninstall("com.tencent.android.qqdownloader")
@@ -86,6 +94,7 @@ if __name__ == '__main__':
     while 1:
         s = an.driver
         toast_msg = s.toast.get_message(wait_timeout=1, cache_timeout=5)
+        print(toast_msg)
         if toast_msg == "onVideoAdLoadSuccess":
             break
     an.play_ad()
