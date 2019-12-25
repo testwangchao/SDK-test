@@ -1,17 +1,16 @@
 import uiautomator2 as ut2
-from tools.loggers import JFMlogging
-log = JFMlogging().getloger()
+from log import Log
 
 
 class InitDriver:
-
     def __init__(self, device_name):
         self.device_name = device_name
+        self.log = Log(self.__str__())
 
     # Android
     @property
     def init_driver(self):
-        log.info("init driver, device_name: %s" % self.device_name)
+        self.log.info("init driver, device_name: %s" % self.device_name)
         try:
             mb = ut2.connect(self.device_name)
 
@@ -20,11 +19,17 @@ class InitDriver:
 
             # set delay 1s after each UI click and click
             mb.click_post_delay = 1
-            log.info("connect %s success" % self.device_name)
+            self.log.info("connect %s success" % self.device_name)
             return mb
 
         except Exception as e:
-            log.info("init driver failed: %s" % e)
+            self.log.info("init driver failed: %s" % e)
+
+    def __str__(self):
+        return "<InitDriver>"
+
+    def __repr__(self):
+        return self.__str__()
 
 
 if __name__ == '__main__':

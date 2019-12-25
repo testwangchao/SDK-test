@@ -10,7 +10,7 @@ class Android(OperateSdk):
     CLOSE_BUTTON = "//android.widget.RelativeLayout[1]/android.widget.RelativeLayout[2]"
     CLICK_BUTTON = "立即下载"
     SKIP_BUTTON = "skip"
-    CONFIRM_CLOSE_BUTTON = "确定关闭"
+    CONFIRM_CLOSE_BUTTON = "确定关闭!"
     CONTINUE_PLAY_AD = "继续播放"
 
     def __init__(self, driver):
@@ -21,6 +21,12 @@ class Android(OperateSdk):
     def __call__(self, driver, **kwargs):
         __watchers = WatchInstall(driver)
         return __watchers
+
+    def __str__(self):
+        return "<OperateSdk>"
+
+    def __repr__(self):
+        return str(self)
 
     # load ad
     def load_ad(self):
@@ -48,6 +54,7 @@ class Android(OperateSdk):
 
     # check toast
     def check_toast(self, expect_toast):
+        print(self.get_toast)
         if expect_toast == self.get_toast:
             return True
         return False
@@ -81,10 +88,6 @@ if __name__ == '__main__':
 
     __driver = InitDriver(device_name="85b531c0").init_driver
     an = Android(driver=__driver)
-    try:
-        __driver.app_uninstall("com.tencent.android.qqdownloader")
-    except Exception as e:
-        print(e)
     __driver.app_stop("com.sigmob.demo.android")
     __driver.app_start("com.sigmob.demo.android")
     watchers = Watcher(__driver)
@@ -115,11 +118,15 @@ if __name__ == '__main__':
     time.sleep(2)
     an.click_button()
 
-    simulator = an(__driver).simulator()
+    simulator = an(__driver).samsung()
     while 1:
         if __driver(text="完成").exists() and __driver(text="打开").exists():
             __driver(text="完成").click()
-            an(__driver).stop_watch()
+            try:
+                __driver.app_uninstall("com.tencent.android.qqdownloader")
+            except Exception as e:
+                print(e)
             break
     an.click_close_button()
     print("hello world")
+    an(__driver).stop_watch()

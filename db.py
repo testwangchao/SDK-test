@@ -62,7 +62,7 @@ class Mongo(SingletonMode):
         # 等于使用 ==
         filter_data = {"_ac_type": "2", "category": "request", "adtype": "2"}
         filter_data.update({"$where": "function() {return this.timestamp>%s}" % record_time})
-        data = self.get_db.find_all(sort_way=-1, field="timestamp", filter=filter_data)
+        data = self.find_all(sort_way=-1, field="timestamp", filter=filter_data)
         if data.count() == 1:
             return data[0]
         else:
@@ -72,7 +72,5 @@ class Mongo(SingletonMode):
 if __name__ == '__main__':
     db = Mongo()
     # db.get_db.drop()
-    data = db.find_all(sort_way=-1, field="seq_id", filter={"$where": "function() {return this.timestamp>1577171286549}"})
-    for i in data:
-        print(i)
-    db.close()
+    result = db.use_tp_get_need_log(record_time=1577266209170)
+    print(result.get("wmsession_id"))

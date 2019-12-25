@@ -6,8 +6,8 @@ class WatchInstall:
     __NEXT = "下一步"
     __INSTALL = "安装"
     __FINISH = "完成"
-    __watcher = Watcher
-    
+    __OPEN = "打开"
+
     def __init__(self, d: "uiautomator2.Device"):
         self._watcher = Watcher(d)
         
@@ -34,3 +34,10 @@ class WatchInstall:
                 watchers.when(i)
                 return watchers
             watchers.when(i)
+
+    def samsung(self):
+        # 允许安装次来源的未知程序
+        accept_install = [self.__CANCEL, self.__INSTALL]
+        self.watcher_click(accept_install, "next to install").click()
+        self._watcher.when("确认").click()
+        self._watcher.start(interval=0.5)
