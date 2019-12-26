@@ -5,7 +5,6 @@ sys.path.append("..")
 from driver import InitDriver
 from dclog import Dclog
 from utils import get_current_time_stamp
-from record_time import RecordTime
 from android import Android
 from exceptions import AdLoadFailed
 from db import Mongo
@@ -19,7 +18,6 @@ class LoadAd(unittest.TestCase):
     driver = InitDriver(device_name="c6c1b81e")
     __d = driver.init_driver
     __op_sdk = Android(driver=__d)
-    __rt = RecordTime()
     __db = Mongo()
     __log = Log()
 
@@ -48,12 +46,15 @@ class LoadAd(unittest.TestCase):
         while 1:
             if self.__op_sdk.check_toast("onVideoAdLoadSuccess"):
                 self.__log.info("广告加载完成")
+                time.sleep(5)
                 break
             if int(get_current_time_stamp(time.time())/1000) - load_ad_time > 45:
                 self.__log.info("广告加载失败")
                 raise AdLoadFailed("广告加载失败")
             if self.__op_sdk.check_toast('''onVideoAdLoadError error: [[ 200000 ] [{"sigmob":{"errorCode":600104,"message":"文件下载错误"}}]]'''):
                 raise AdLoadFailed("广告加载失败")
+            if self.__op_sdk.check_toast('''onVideoAdLoadError error: [[ 200000 ] [{"sigmob":{"errorCode":200000,"message":"广告无填充"}}]]'''):
+                raise AdLoadFailed("广告无填充")
         # self.assertEqual(self.__op_sdk.get_toast, "onVideoAdPlayStart")
         # todo: 校验2号点request、respond
         # todo: 校验5号点init、request、respond、loadstart、loadend

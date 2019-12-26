@@ -5,7 +5,7 @@ from log import Log
 class InitDriver:
     def __init__(self, device_name):
         self.device_name = device_name
-        self.log = Log(self.__str__())
+        self.log = Log()
 
     # Android
     @property

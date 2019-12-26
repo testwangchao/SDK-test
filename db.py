@@ -2,6 +2,8 @@ import pymongo
 
 import exceptions
 from exceptions import DbSortFieldIsNone
+from log import Log
+from utils import SingletonMode
 
 
 class SingletonMode:
@@ -10,12 +12,10 @@ class SingletonMode:
             cls._instance = super(SingletonMode, cls).__new__(cls, *args, **kwargs)
         return cls._instance
 
-    @staticmethod
-    def get_mdb():
-        return Mongo().get_db()
-
 
 class Mongo(SingletonMode):
+
+    __log = Log()
 
     def __init__(self, host="localhost", port=27017, db="sigmob"):
         self.db = db
@@ -63,10 +63,11 @@ class Mongo(SingletonMode):
         filter_data = {"_ac_type": "2", "category": "request", "adtype": "2"}
         filter_data.update({"$where": "function() {return this.timestamp>%s}" % record_time})
         data = self.find_all(sort_way=-1, field="timestamp", filter=filter_data)
+        self.__log.info("查询结果数量: %s" % data.count())
         if data.count() == 1:
             return data[0]
         else:
-            return exceptions.LogDataError("查询出的打点数据异常，数量为：%s" % data.count())
+            raise  exceptions.LogDataError("查询出的打点数据异常，数量为：%s" % data.count())
 
 
 if __name__ == '__main__':

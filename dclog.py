@@ -73,26 +73,16 @@ class Dclog:
             del self.filter_para[k]
 
     def remove_field(self, remove_lt=None, need_list=None):
+        if not remove_lt and not need_list:
+            return self.BASE_FIELD_LIST
         data = copy.deepcopy(self.BASE_FIELD_LIST)
-        for remove_key in remove_lt:
-            data.remove(remove_key)
+        if remove_lt:
+            for remove_key in remove_lt:
+                data.remove(remove_key)
         if need_list:
             for need_key in need_list:
                 data.append(need_key)
         return data
 
 
-if __name__ == '__main__':
-    dclog = Dclog(wmsession_id="7c8e0a68-3b0b-4a53-9c78-ca2834df45f5")
-    paras = [{"two_point_request": {"_ac_type": "2", "category": "request", "adtype": "1"}, "remove_lt": ["vlist", "load_id"]}]
-    for para in paras:
-        for k in para:
-            value = para.get(k)
-            if isinstance(value, dict):
-                for key in value:
-                    dclog[key] = value.get(key)
-        data = dclog.remove_field(remove_lt=para.get("remove_lt", None), need_list=para.get("need_list", None))
-        print(dclog.filter_para)
-        dclog.clear_para()
-        print(dclog.filter_para)
-        print(data)
+

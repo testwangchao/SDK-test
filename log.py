@@ -1,9 +1,11 @@
 import logging
 import time
 import os
+import logging.handlers
+from utils import SingletonMode
 
 
-class Log:
+class Log(SingletonMode):
     def __init__(self, obj_name=None):
         self.logger = logging.getLogger(obj_name)
         # 设置输出的等级
@@ -34,8 +36,9 @@ class Log:
         console.setLevel(LEVELS["INFO"])
         console.setFormatter(formatter)
         # 添加内容到日志句柄中
-        self.logger.addHandler(rotatingFileHandler)
-        self.logger.addHandler(console)
+        if not self.logger.handlers:
+            self.logger.addHandler(rotatingFileHandler)
+            self.logger.addHandler(console)
         self.logger.setLevel(LEVELS["INFO"])
 
     def info(self, message):

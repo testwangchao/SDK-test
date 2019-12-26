@@ -11,6 +11,13 @@ def get_current_time_stamp(c_time):
     return current_time_stamp
 
 
+class SingletonMode:
+    def __new__(cls, *args, **kwargs):
+        if not hasattr(cls, '_instance'):
+            cls._instance = super(SingletonMode, cls).__new__(cls, *args, **kwargs)
+        return cls._instance
+
+
 all_paras = [
     {"two_point_request": {"_ac_type": "2", "category": "request", "adtype": "1"}, "remove_lt": ["vlist", "load_id"], "need_list": []},
     {"two_point_respond": {"_ac_type": "2", "category": "respond", "adtype": "1"}, "remove_lt": [], "need_list": []},
