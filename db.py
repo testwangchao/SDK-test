@@ -75,3 +75,4 @@ if __name__ == '__main__':
     # db.get_db.drop()
     result = db.use_tp_get_need_log(record_time=1577266209170)
     print(result.get("wmsession_id"))
+    # 来哦
